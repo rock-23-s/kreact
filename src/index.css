@@ -1,3 +1,15 @@
+.border, .borderComponent, .borderClass {
+  border: 2px solid;
+}
+
 .border {
-  border: 2px solid yellowgreen;
+  border-color: yellowgreen;
+}
+
+.borderComponent {
+  border-color: red;
+}
+
+.borderClass{
+  border-color: blue;
 }

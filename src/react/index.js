@@ -7,7 +7,6 @@
  * 返回一个虚拟dom（vnode）
  */
 function createElement(type, props, ...children) {
-  console.log(children, '---- children')
   return {
     type,
     props: {
