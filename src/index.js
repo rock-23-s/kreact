@@ -4,7 +4,6 @@ import ReactComponents from './react/react-component';
 import './index.css';
 // mock数据
 import { mockList } from '../mock';
-console.log(mockList)
 
 
 // function component
@@ -18,9 +17,13 @@ const App = ({name}) => {
 // class component
 class AppComponent extends ReactComponents {
   render() {
-    const { name } = this.props;
-    return <div className="borderClass">This is {name}</div>
+    const { name, color } = this.props;
+    console.log(this.props)
+    return <div style={{backgroundColor: color, width: '100px'}} className="borderClass">This is {name}</div>
   }
+}
+AppComponent.defaultProps = {
+  color: "#ff8cc7"
 }
 
 

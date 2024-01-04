@@ -1,11 +1,12 @@
-import hasOwnProperty from './hasOwnProperty'
+import hasOwnProperty from './hasOwnProperty';
+// 引入style的处理方法
+import { setValueForStyles } from './react-dom-bindings';
 
 function render(vnode, container) {
 
   // vnode -> node
   const node = createNode(vnode);
   // 把 node 更新到 container
-  console.log(node, '--- render')
   container.appendChild(node);
 }
 
@@ -14,6 +15,18 @@ function createNode(vnode) {
   const { type, props } = vnode;
   if(!type && !props) return;
   let node;
+  let propsName;
+  /**
+   * defaultProps处理
+   */
+  if(type && type?.defaultProps) {
+    let defaultProps = type.defaultProps
+    for(propsName in defaultProps) {
+      if(props[propsName] === undefined) {
+        props[propsName] = defaultProps[propsName];
+      }
+    }
+  }
   if(typeof type === 'function') {
     // node = type.isReactComponent
     node = type.prototype?.isReactComponent
@@ -77,12 +90,19 @@ function updateNode(node, nextValue) {
   Object.keys(nextValue)
   .filter(k => k !== "children")
   .forEach(k => {
-    if(k.slice(0,2) === 'on') {
-      // 以on开头，就认为是一个事件，这里是简易版处理，源码的处理复杂些
-      let eventName = k.slice(2).toLocaleLowerCase();
-      node.addEventListener(eventName, nextValue[k])
-    } else {
-      node[k] = nextValue[k];
+    console.log(k, k === 'style')
+    switch (k) {
+      case 'style':
+        setValueForStyles(node, nextValue[k]);
+        break;
+      case 'onClick':
+        // 以on开头，就认为是一个事件，这里是简易版处理，源码的处理复杂些
+        let eventName = k.slice(2).toLocaleLowerCase();
+        node.addEventListener(eventName, nextValue[k])
+        break;
+      default:
+        node[k] = nextValue[k];
+        break;
     }
   })
 }
